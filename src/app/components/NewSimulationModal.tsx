@@ -1,3 +1,5 @@
+"use client";
+
 import { api } from "@/src/services/api";
 import { useState } from "react";
 
