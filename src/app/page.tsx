@@ -1,6 +1,8 @@
+"use client";
+
+import KanbanBoard from "@/src/app/components/KanbanBoard";
+import NewSimulationModal from "@/src/app/components/NewSimulationModal";
 import { useState } from "react";
-import KanbanBoard from "./components/KanbanBoard";
-import NewSimulationModal from "./components/NewSimulationModal";
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
