@@ -18,7 +18,9 @@ export default function Home() {
     <main className="min-h-screen bg-gray-200 flex flex-col">
       <header className="bg-white shadow p-4 z-10">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-blue-900">MediadorTrack 🚀</h1>
+          <h1 className="text-2xl font-bold text-blue-900">
+            MediadorTrack App🚀
+          </h1>
           <button
             onClick={() => setIsModalOpen(true)}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm active:transform active:scale-95"
