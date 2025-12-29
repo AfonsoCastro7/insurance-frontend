@@ -1,46 +1,53 @@
+"use client";
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
 
+async function parseJson(res: Response) {
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
 export const api = {
-  // Buscar dados (GET)
   async get(endpoint: string) {
-    const res = await fetch(`${BASE_URL}${endpoint}`);
-    if (!res.ok) throw new Error(`Erro no fetch: ${res.statusText}`);
-    return res.json();
+    const res = await fetch(`${BASE_URL}${endpoint}`, {
+      credentials: "include",
+    });
+
+    if (!res.ok) throw new Error(res.statusText);
+
+    return parseJson(res);
   },
 
-  // Enviar dados (POST)
   async post(endpoint: string, body: any) {
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    if (!res.ok) throw new Error(`Erro no post: ${res.statusText}`);
-    return res.json();
+
+    if (!res.ok) throw new Error(res.statusText);
+    return parseJson(res);
   },
 
-  // Atualizar (PUT) - Para o Drag & Drop
   async put(endpoint: string, body: any) {
-    // Se o body for string simples (como o status), não fazemos JSON.stringify
-    const isString = typeof body === "string";
-
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       method: "PUT",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
-      body: isString ? body : JSON.stringify(body),
+      body: typeof body === "string" ? body : JSON.stringify(body),
     });
-    if (!res.ok) throw new Error(`Erro no put: ${res.statusText}`);
-    return isJson(res) ? res.json() : null; // Proteção caso o backend não devolva JSON
+
+    if (!res.ok) throw new Error(res.statusText);
+    return parseJson(res);
   },
 
-  // Apagar (DELETE)
   async delete(endpoint: string) {
-    await fetch(`${BASE_URL}${endpoint}`, { method: "DELETE" });
-  },
-};
+    const res = await fetch(`${BASE_URL}${endpoint}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
 
-// Pequeno helper para verificar se a resposta é JSON
-const isJson = (res: Response) => {
-  const contentType = res.headers.get("content-type");
-  return contentType && contentType.indexOf("application/json") !== -1;
+    if (!res.ok) throw new Error(res.statusText);
+  },
 };

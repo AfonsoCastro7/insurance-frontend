@@ -7,14 +7,14 @@ import {
   Draggable,
   DropResult,
 } from "@hello-pangea/dnd";
-import { SimulationRequest } from "../types";
+import { SimulationRequest, SimulationStatus } from "../types";
 import { api } from "@/src/services/api";
 
 const COLUMNS = [
   { id: "NOVO", title: "A Fazer", color: "bg-blue-100 border-blue-300" },
   {
     id: "EM_ANALISE",
-    title: "Em Análise",
+    title: "Em Analise",
     color: "bg-yellow-100 border-yellow-300",
   },
   {
@@ -29,17 +29,48 @@ const COLUMNS = [
 export default function KanbanBoard() {
   const [items, setItems] = useState<SimulationRequest[]>([]);
   const [loading, setLoading] = useState(true);
+  function normalizeSimulation(raw: any): SimulationRequest | null {
+    const id = raw?.id ?? raw?.simulationId;
+    if (id == null) return null;
 
-  // Carregar dados iniciais
+    const lead =
+      raw?.lead ||
+      (raw?.leadId
+        ? {
+            id: raw.leadId,
+            name: raw.leadName,
+            email: raw.leadEmail,
+            phone: raw.leadPhone,
+          }
+        : undefined);
+
+    return {
+      id,
+      status: (raw?.status as SimulationStatus) ?? "NOVO",
+      type: raw?.type ?? "Simulacao",
+      description: raw?.description ?? "",
+      value: raw?.value ?? null,
+      createdAt: raw?.createdAt,
+      lead,
+    };
+  }
+
   useEffect(() => {
-    api.get("/simulations").then((data) => setItems(data));
+    api
+      .get("/simulations")
+      .then((data) => {
+        const list = Array.isArray(data) ? data : [];
+        const normalized = list
+          .map(normalizeSimulation)
+          .filter(Boolean) as SimulationRequest[];
+        setItems(normalized);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
-  // FUNÇÃO MÁGICA: O que acontece quando largas o cartão
   const onDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
 
-    // Se largou fora ou no mesmo sítio, não faz nada
     if (!destination) return;
     if (
       destination.droppableId === source.droppableId &&
@@ -47,26 +78,26 @@ export default function KanbanBoard() {
     )
       return;
 
-    // 1. Atualizar visualmente IMEDIATAMENTE (Otimista)
     const newStatus = destination.droppableId;
     const updatedItems = items.map((item) =>
       item.id.toString() === draggableId
-        ? { ...item, status: newStatus as any }
+        ? { ...item, status: newStatus as SimulationStatus }
         : item
     );
     setItems(updatedItems);
 
     try {
-      await api.put(`/simulations/${draggableId}/status`, newStatus);
+      await api.put(`/simulations/${draggableId}/status`, {
+        status: newStatus,
+      });
     } catch (error) {
       console.error("Erro ao salvar:", error);
-      alert("Erro ao salvar a mudança. Recarrega a página.");
+      alert("Erro ao salvar a mudanca. Recarrega a pagina.");
     }
   };
 
   if (loading)
     return <div className="p-10 text-center">A carregar o quadro...</div>;
-
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex h-full gap-4 overflow-x-auto pb-4 items-start">
@@ -87,42 +118,47 @@ export default function KanbanBoard() {
 
                 <div className="space-y-3">
                   {items
-                    .filter((item) => item.status === col.id)
-                    .map((item, index) => (
-                      <Draggable
-                        key={item.id}
-                        draggableId={item.id.toString()}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className="bg-white p-4 rounded shadow hover:shadow-md transition-shadow cursor-pointer border border-gray-100"
-                            style={{ ...provided.draggableProps.style }} // Necessário para a animação
-                          >
-                            <div className="flex justify-between items-start mb-2">
-                              <span className="text-xs font-bold px-2 py-1 bg-blue-50 text-blue-700 rounded-full uppercase tracking-wider">
-                                {item.type}
-                              </span>
-                              {item.value && (
-                                <span className="text-sm font-semibold text-green-600">
-                                  {item.value}€
+                    .filter(
+                      (item) =>
+                        item && item.id != null && item.status === col.id
+                    )
+                    .map((item, index) =>
+                      item && item.id != null ? (
+                        <Draggable
+                          key={item.id}
+                          draggableId={item.id.toString()}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className="bg-white p-4 rounded shadow hover:shadow-md transition-shadow cursor-pointer border border-gray-100"
+                              style={{ ...provided.draggableProps.style }}
+                            >
+                              <div className="flex justify-between items-start mb-2">
+                                <span className="text-xs font-bold px-2 py-1 bg-blue-50 text-blue-700 rounded-full uppercase tracking-wider">
+                                  {item.type}
                                 </span>
-                              )}
-                            </div>
+                                {item.value && (
+                                  <span className="text-sm font-semibold text-green-600">
+                                    {item.value}
+                                  </span>
+                                )}
+                              </div>
 
-                            <h4 className="font-bold text-gray-800">
-                              {item.lead.name}
-                            </h4>
-                            <p className="text-sm text-gray-500 mb-3 truncate">
-                              {item.description}
-                            </p>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
+                              <h4 className="font-bold text-gray-800">
+                                {item.lead?.name ?? "Cliente"}
+                              </h4>
+                              <p className="text-sm text-gray-500 mb-3 truncate">
+                                {item.description}
+                              </p>
+                            </div>
+                          )}
+                        </Draggable>
+                      ) : null
+                    )}
                   {provided.placeholder}
                 </div>
               </div>
