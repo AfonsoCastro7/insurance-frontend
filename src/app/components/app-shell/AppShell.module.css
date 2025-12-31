@@ -1,0 +1,113 @@
+/* Layout */
+.root {
+  min-height: 100vh;
+  display: flex;
+  background-color: #f3f4f6;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+  background-color: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  display: flex;
+  flex-direction: column;
+  transition: width 200ms ease;
+}
+
+.sidebarExpanded {
+  width: 10rem;
+}
+
+.sidebarCollapsed {
+  width: 4rem;
+}
+
+.logo {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Navigation */
+.nav {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.navList {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+
+  color: #374151;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.navItem:hover {
+  background-color: #f1f5f9;
+}
+
+.navItemActive {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.navLabel {
+  transition: all 150ms ease;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.navLabelExpanded {
+  opacity: 1;
+  max-width: 200px;
+}
+
+.navLabelCollapsed {
+  opacity: 0;
+  max-width: 0;
+}
+
+/* Main content */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.header {
+  flex-shrink: 0;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Main */
+.main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1.5rem;
+}

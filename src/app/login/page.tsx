@@ -32,44 +32,139 @@ export default function LoginPage() {
   if (loading) return <>Carregando...</>;
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f0f8ff] via-white to-[#d8f1ff] px-4">
-      <div className="w-full max-w-md bg-white/80 backdrop-blur rounded-2xl p-8 shadow-2xl border border-white/70">
-        <div className="text-center mb-6">
-          <div className="text-3xl font-bold text-sky-700">MediadorTrack</div>
-          <p className="text-sm text-gray-500 mt-1">
-            Acede para continuar a gerir as simulaçoes.
+    <main
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background:
+          "linear-gradient(to bottom right, #f0f8ff, #ffffff, #d8f1ff)",
+        paddingLeft: "1rem",
+        paddingRight: "1rem",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "28rem",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          backdropFilter: "blur(8px)",
+          borderRadius: "1rem",
+          padding: "2rem",
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+          border: "1px solid rgba(255, 255, 255, 0.7)",
+        }}
+      >
+        <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+          <div
+            style={{
+              fontSize: "1.875rem",
+              fontWeight: 700,
+              color: "#0369a1",
+            }}
+          >
+            MediadorTrack
+          </div>
+          <p
+            style={{
+              fontSize: "0.875rem",
+              color: "#6b7280",
+              marginTop: "0.25rem",
+            }}
+          >
+            Acede para continuar a gerir as simulaЗхoes.
           </p>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            rowGap: "1rem",
+          }}
+        >
           {error && (
-            <div className="rounded bg-red-50 p-3 text-sm text-red-600">
+            <div
+              style={{
+                borderRadius: "0.25rem",
+                backgroundColor: "#fef2f2",
+                padding: "0.75rem",
+                fontSize: "0.875rem",
+                color: "#dc2626",
+              }}
+            >
               {error}
             </div>
           )}
 
-          <div className="space-y-2">
-            <label className="text-sm text-gray-600">Email</label>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              rowGap: "0.5rem",
+            }}
+          >
+            <label style={{ fontSize: "0.875rem", color: "#4b5563" }}>
+              Email
+            </label>
             <input
               type="email"
               placeholder="email@exemplo.com"
-              className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-300"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              style={{
+                width: "100%",
+                borderRadius: "0.5rem",
+                border: "1px solid #e5e7eb",
+                padding: "0.5rem 0.75rem",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm text-gray-600">Password</label>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              rowGap: "0.5rem",
+            }}
+          >
+            <label style={{ fontSize: "0.875rem", color: "#4b5563" }}>
+              Password
+            </label>
             <input
               type="password"
-              placeholder="••••••••"
-              className="w-full rounded-lg border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-300"
+              placeholder="ѓ?Ѕѓ?Ѕѓ?Ѕѓ?Ѕѓ?Ѕѓ?Ѕѓ?Ѕѓ?Ѕ"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              style={{
+                width: "100%",
+                borderRadius: "0.5rem",
+                border: "1px solid #e5e7eb",
+                padding: "0.5rem 0.75rem",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
             />
           </div>
 
-          <button className="w-full rounded-xl bg-gradient-to-r from-sky-500 to-sky-600 py-2.5 text-white font-semibold shadow hover:shadow-md transition-transform active:scale-95">
+          <button
+            style={{
+              width: "100%",
+              borderRadius: "0.75rem",
+              background: "linear-gradient(to right, #0ea5e9, #0284c7)",
+              padding: "0.625rem 0",
+              color: "#ffffff",
+              fontWeight: 600,
+              boxShadow:
+                "0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)",
+              border: "none",
+              cursor: "pointer",
+              transition: "transform 150ms ease",
+            }}
+          >
             Entrar
           </button>
         </form>

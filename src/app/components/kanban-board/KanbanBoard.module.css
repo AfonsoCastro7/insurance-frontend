@@ -1,0 +1,117 @@
+/* Loading */
+.loading {
+  padding: 2.5rem;
+  text-align: center;
+  color: #374151;
+}
+
+/* Board */
+.board {
+  display: flex;
+  height: 100%;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  align-items: flex-start;
+}
+
+/* Column */
+.column {
+  flex-shrink: 0;
+  width: 20rem;
+  min-height: 500px;
+
+  border-radius: 0.5rem;
+  padding: 1rem;
+
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Column header */
+.columnHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  font-weight: 700;
+  color: #374151;
+}
+
+.columnCount {
+  background-color: #ffffff;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Cards list */
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Card */
+.card {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid #f3f4f6;
+
+  cursor: pointer;
+  transition: box-shadow 150ms ease;
+
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* Card header */
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.cardType {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border-radius: 9999px;
+
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cardValue {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #16a34a;
+}
+
+/* Card body */
+.cardTitle {
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.cardDescription {
+  font-size: 0.875rem;
+  color: #6b7280;
+
+  margin-bottom: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

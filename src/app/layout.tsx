@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "../context/AuthContext";
+import { CSSProperties } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,14 +24,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const bodyStyle = {
+    fontFamily: "var(--font-geist-sans)",
+    WebkitFontSmoothing: "antialiased",
+    MozOsxFontSmoothing: "grayscale",
+    ["--font-geist-sans" as any]: geistSans.style.fontFamily,
+    ["--font-geist-mono" as any]: geistMono.style.fontFamily,
+  } as CSSProperties;
+
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body style={bodyStyle}>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
