@@ -17,6 +17,22 @@ type AuthContextType = {
   logout: () => Promise<void>;
 };
 
+type UnknownRecord = Record<string, unknown>;
+
+const isRecord = (value: unknown): value is UnknownRecord =>
+  typeof value === "object" && value !== null;
+
+const isUser = (value: unknown): value is User => {
+  if (!isRecord(value)) return false;
+  return typeof value.email === "string";
+};
+
+const extractUser = (data: unknown): User | null => {
+  if (isUser(data)) return data;
+  if (isRecord(data) && isUser(data.user)) return data.user;
+  return null;
+};
+
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -26,8 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function loadUser() {
     try {
       const data = await api.get("/auth/me");
-      const nextUser = (data as any)?.user ?? data ?? null;
-      setUser(nextUser);
+      setUser(extractUser(data));
     } catch {
       setUser(null);
     } finally {
@@ -43,7 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setLoading(true);
       const data = await api.post("/auth/login", { email, password });
-      const nextUser = (data as any)?.user ?? data ?? null;
+      const nextUser = extractUser(data);
       if (nextUser) {
         setUser(nextUser);
       } else {

@@ -2,13 +2,13 @@
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api";
 
-async function parseJson(res: Response) {
+async function parseJson(res: Response): Promise<unknown> {
   const text = await res.text();
   return text ? JSON.parse(text) : null;
 }
 
 export const api = {
-  async get(endpoint: string) {
+  async get(endpoint: string): Promise<unknown> {
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       credentials: "include",
     });
@@ -18,7 +18,7 @@ export const api = {
     return parseJson(res);
   },
 
-  async post(endpoint: string, body: any) {
+  async post(endpoint: string, body: unknown): Promise<unknown> {
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       method: "POST",
       credentials: "include",
@@ -30,7 +30,7 @@ export const api = {
     return parseJson(res);
   },
 
-  async put(endpoint: string, body: any) {
+  async put(endpoint: string, body: unknown): Promise<unknown> {
     const res = await fetch(`${BASE_URL}${endpoint}`, {
       method: "PUT",
       credentials: "include",

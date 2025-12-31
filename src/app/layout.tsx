@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "../context/AuthContext";
-import { CSSProperties } from "react";
+import type { CSSProperties } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,13 +27,16 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const bodyStyle = {
+  const bodyStyle: CSSProperties & {
+    "--font-geist-sans": string;
+    "--font-geist-mono": string;
+  } = {
     fontFamily: "var(--font-geist-sans)",
     WebkitFontSmoothing: "antialiased",
     MozOsxFontSmoothing: "grayscale",
-    ["--font-geist-sans" as any]: geistSans.style.fontFamily,
-    ["--font-geist-mono" as any]: geistMono.style.fontFamily,
-  } as CSSProperties;
+    "--font-geist-sans": geistSans.style.fontFamily,
+    "--font-geist-mono": geistMono.style.fontFamily,
+  };
 
   return (
     <html lang="en">

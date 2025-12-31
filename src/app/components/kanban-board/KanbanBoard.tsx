@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import {
@@ -12,6 +12,30 @@ import { api } from "@/src/services/api";
 import styles from "./KanbanBoard.module.css";
 import { SimulationRequest, SimulationStatus } from "../../types";
 
+type UnknownRecord = Record<string, unknown>;
+
+const isRecord = (value: unknown): value is UnknownRecord =>
+  typeof value === "object" && value !== null;
+
+const isSimulationStatus = (value: unknown): value is SimulationStatus =>
+  value === "NOVO" ||
+  value === "EM_ANALISE" ||
+  value === "AGUARDA_CLIENTE" ||
+  value === "GANHO" ||
+  value === "PERDIDO";
+
+const toNumber = (value: unknown): number | null => {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string" && value.trim() !== "") {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) return parsed;
+  }
+  return null;
+};
+
+const toString = (value: unknown): string | undefined =>
+  typeof value === "string" ? value : undefined;
+
 const COLUMNS = [
   {
     id: "NOVO",
@@ -21,7 +45,7 @@ const COLUMNS = [
   },
   {
     id: "EM_ANALISE",
-    title: "Em Análise",
+    title: "Em Analise",
     backgroundColor: "#fef9c3",
     borderColor: "#fde047",
   },
@@ -43,28 +67,42 @@ export default function KanbanBoard() {
   const [items, setItems] = useState<SimulationRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
-  function normalizeSimulation(raw: any): SimulationRequest | null {
-    const id = raw?.id ?? raw?.simulationId;
+  function normalizeSimulation(raw: unknown): SimulationRequest | null {
+    if (!isRecord(raw)) return null;
+
+    const id = toNumber(raw.id ?? raw.simulationId);
     if (id == null) return null;
 
-    const lead =
-      raw?.lead ||
-      (raw?.leadId
-        ? {
-            id: raw.leadId,
-            name: raw.leadName,
-            email: raw.leadEmail,
-            phone: raw.leadPhone,
-          }
-        : undefined);
+    let lead: SimulationRequest["lead"];
+    if (isRecord(raw.lead)) {
+      const leadId = toNumber(raw.lead.id);
+      if (leadId != null) {
+        lead = {
+          id: leadId,
+          name: toString(raw.lead.name),
+          email: toString(raw.lead.email),
+          phone: toString(raw.lead.phone),
+        };
+      }
+    } else if (raw.leadId != null) {
+      const leadId = toNumber(raw.leadId);
+      if (leadId != null) {
+        lead = {
+          id: leadId,
+          name: toString(raw.leadName),
+          email: toString(raw.leadEmail),
+          phone: toString(raw.leadPhone),
+        };
+      }
+    }
 
     return {
       id,
-      status: (raw?.status as SimulationStatus) ?? "NOVO",
-      type: raw?.type ?? "Simulação",
-      description: raw?.description ?? "",
-      value: raw?.value ?? null,
-      createdAt: raw?.createdAt,
+      status: isSimulationStatus(raw.status) ? raw.status : "NOVO",
+      type: typeof raw.type === "string" ? raw.type : "Simulacao",
+      description: typeof raw.description === "string" ? raw.description : "",
+      value: toNumber(raw.value),
+      createdAt: toString(raw.createdAt),
       lead,
     };
   }
@@ -108,7 +146,7 @@ export default function KanbanBoard() {
       });
     } catch (error) {
       console.error("Erro ao salvar:", error);
-      alert("Erro ao salvar a mudança. Recarregue a página.");
+      alert("Erro ao salvar a mudanca. Recarregue a pagina.");
     }
   };
 
